@@ -16,10 +16,16 @@ Re-check `/backend/api/health` immediately before you record — if `memory.mode
 ever reads anything but `live`, drop the Hindsight name. See "The one line to
 get right" at the bottom.
 
-**Incidents referenced: `INC-004` and `INC-001`.** Both are in the reference
-corpus, so they exist on the public URL and locally. Do not use an incident
-number outside `INC-001`–`INC-008`; anything higher existed only in a local
-scratch database and will 404 for anyone following along.
+**Anchor incident: `INC-005`** (*Timeout errors after caching layer change*). It
+is in the reference corpus, so it exists on the public URL and locally. The
+verified recall for it is **`INC-004`, `INC-001` and `INC-002`** — three real
+incidents, all resolvable. Do not use an incident number outside
+`INC-001`–`INC-008`; anything higher existed only in a local scratch database.
+
+**Memory is pre-loaded with `INC-001`–`INC-004`.** Those are the "previous
+incidents" the cold open recalls from. `INC-005` is deliberately *not* retained,
+so its panel cites other incidents rather than itself. You retain it live during
+the take, at the 1:20 mark.
 
 ---
 
@@ -73,15 +79,15 @@ limited — retake it.
 
 ## 0:00–0:15 — Cold open
 
-**Show:** Incident page for `/incidents/INC-004`, scrolled to the Hindsight
+**Show:** Incident page for `/incidents/INC-005`, scrolled to the Hindsight
 memory panel, cursor resting on a recalled incident.
 
 **Say:**
 
 > "This panel shows three incidents from the past that had this same failure
-> shape. This system is called IncidentMind, and the reason it exists is to make
-> sure that when an incident repeats, the next investigation doesn't start from
-> zero."
+> shape — `INC-004`, `INC-001`, `INC-002`. This system is called IncidentMind,
+> and the reason it exists is to make sure that when an incident repeats, the
+> next investigation doesn't start from zero."
 
 No logo animation. Open on the product.
 
@@ -115,17 +121,26 @@ thinking.
 > "Three things just happened. It parsed the signals, it recalled prior
 > experience, and it generated ranked hypotheses."
 
-**Show:** Point at the recommendation card.
+**Show:** Point at the recommendation card — first the action, then the two
+counters underneath it (*Evidence*, *History*).
 
-> "Read the *why*: it names the specific past incident, and says the same remedy
-> worked before. That's the difference — it isn't proposing a generic rollback,
-> it's citing evidence."
+> "Two real numbers behind this recommendation. *Evidence*: it drew on three
+> prior experiences. *History*: this remedy already succeeded before on this
+> service. That's the difference — not a generic rollback, but a remedy it has
+> seen work."
 
-**Optional but strong:** point at the confidence value, then say:
+Do **not** say this card names a past incident — it doesn't. It counts evidence
+and states whether the remedy has precedent. The incident IDs are one panel
+over, in **Hindsight memory**.
 
-> "Confidence is higher than the same investigation would get without the
-> recalled evidence, because the recommendation is backed by precedent rather
-> than inference alone."
+**Show:** Point at **Hindsight memory**, then at the confidence value.
+
+> "Confidence is the agent's own figure for this run. What makes it worth
+> trusting is the panel beside it — the evidence is inspectable rather than
+> hidden inside the model."
+
+> Do **not** claim confidence is *higher* because memory contributed. That
+> comparison was never measured. State the number, and point at the evidence.
 
 ---
 
@@ -146,15 +161,20 @@ Let the confirmation sit on screen for a beat. This is the hinge of the video.
 
 ## 2:00–2:45 — The payoff
 
-**Show:** Trigger a similar incident (or open `/incidents/INC-001`), click
-**Investigate**, scroll straight to the memory panel.
+**Show:** On INC-005's page, click **Trigger a similar incident** → **Create**.
+A new incident opens. Click **Investigate**, then scroll straight to the memory
+panel.
+
+> Leave the **Simulated input** badge visible — the dialog labels the new
+> incident's text as a canned phrasing, and it is. Don't call it telemetry.
 
 **Say:**
 
-> "Same product. Different incident. And the experience we just retained is in
-> this list."
+> "Same product, different incident — and the wording is deliberately different,
+> so this isn't matching on keywords. The experience we retained thirty seconds
+> ago is in this list, by name: `INC-005`."
 
-**Stop talking here.** Let them read it. Then, slowly:
+**Stop talking here.** Let them read the recalled entry. Then, slowly:
 
 > "The first incident was resolved. Its experience was retained. It came back
 > when a similar incident arrived. That is the whole product."
@@ -228,14 +248,18 @@ highlighted, plus the phrase "it remembered."
 
 | # | Time | Source | Note |
 |---|---|---|---|
-| 1 | 0:00 | `/incidents/INC-004` memory panel | Cold open, no title card |
+| 1 | 0:00 | `/incidents/INC-005` memory panel | Cold open, no title card |
 | 2 | 0:15 | same, scroll up to signals | |
 | 3 | 0:30 | `/dashboard` | KPI cards |
-| 4 | 0:45 | back to INC-004, click Investigate | **Leave the 2–5s wait in** |
-| 5 | 1:00 | recommendation card | The "why" is the money shot |
+| 4 | 0:45 | back to INC-005, click Investigate | **Leave the 2–5s wait in** |
+| 5 | 1:00 | recommendation card + memory panel | Point at *Evidence*/*History*, then the IDs |
 | 6 | 1:20 | Approve → Resolve → Retain | Confirmation must be legible |
-| 7 | 2:00 | `/incidents/INC-001` Investigate → memory | **The payoff. Don't cut early.** |
+| 7 | 2:00 | Trigger similar → Investigate → memory | **The payoff. Don't cut early.** |
 | 8 | 2:45 | dashboard or incident, wide | Close |
 
 Capture 4, 5 and 7 in **separate takes** and assemble. You cannot rewind a
 5-second model response if you flub the narration over it.
+
+**One more time, because it is the easiest thing to get wrong:** the memory
+panel names past incidents. The recommendation card counts them. Don't swap
+those two claims.

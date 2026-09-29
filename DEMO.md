@@ -10,6 +10,33 @@ quoted it comes from a real API response, not an estimate.
 
 ## Before you start
 
+Everything below is verified against the **public deployment**. You can also run
+it locally, and both are covered here.
+
+### Option 1 — the public deployment (nothing to start)
+
+Open <https://incidentmind-eight.vercel.app>.
+
+Warm it first: load
+<https://incidentmind-eight.vercel.app/backend/api/health> once and wait for
+`"memory":"live"`. The free hosting tier sleeps after 15 minutes idle, so the
+first request after a pause takes **30–50 seconds**. That is a cold start, not a
+fault — do not click anything until the status line settles.
+
+A cold start re-seeds the incident list from the reference corpus
+(`INC-001`–`INC-008`). The Hindsight memories live outside that database and are
+never lost. See "The ephemeral database" below.
+
+**State the demo expects.** Hindsight holds retained experience for
+`INC-001`–`INC-004`. Those are the "previous incidents" recalled in step 3.
+`INC-005` is deliberately **not** retained, so its panel cites other incidents
+instead of itself; step 5 retains it live. If someone has investigated or
+retained `INC-005` already in your session, its panel will cite `INC-005`, which
+looks like a circle — pick a different non-retained incident (`INC-006`,
+`INC-007`, `INC-008`) for step 3, or note it and move on.
+
+### Option 2 — run it locally
+
 Both services must be running. The frontend alone is not enough — every panel
 reads from the API.
 
@@ -23,16 +50,22 @@ cd C:\Users\VISHAL\OneDrive\Desktop\HWH-3.0\frontend
 npm run dev
 ```
 
-Then open <http://localhost:3000>.
+Then open <http://localhost:3000>. The incident corpus is the same, so every
+incident number below works identically on both routes.
 
-**Check this before you walk in.** The top of the dashboard and the command
-center both show a live status line. It should read
-`API connected · demo mode` or `API connected · operational mode`. If it reads
-`Waiting for the IncidentMind API`, the backend is not up and the demo will not
-work. Stop and fix that first.
+**Check this before you walk in.** The landing page hero carries a live status
+line that should read:
 
-> `demo mode` is not a lesser product — it is the honest label for which
-> providers answered. See "Backup demo" below.
+```
+API connected · operational mode
+```
+
+That is the expected reading on the public deployment — Groq and Hindsight are
+both live, so `demo_mode` is `false`. If it reads `API connected · demo mode`,
+check `/backend/api/health`: one of the two providers has stopped answering.
+The demo still works, but see "The honest limitation" below before you narrate
+it. If it reads `Waiting for the IncidentMind API`, the API is not up — stop and
+fix that first.
 
 ---
 
@@ -42,7 +75,8 @@ Target time: **75 seconds**, leaving room for questions.
 
 ### 1 · Landing page (10s)
 
-Open <http://localhost:3000>.
+Open the deployment — <https://incidentmind-eight.vercel.app> (or
+<http://localhost:3000> if you are running locally).
 
 Land on the hero. One sentence, out loud:
 
@@ -71,7 +105,7 @@ Do **not** walk the incident table. That is a list, not a story.
 
 ### 3 · Incident A — investigate with memory (25s)
 
-Open **`/incidents/INC-011`**.
+Open **`/incidents/INC-005`** (*Timeout errors after caching layer change*).
 
 Read the header aloud: service, severity, status, detection time.
 
@@ -80,11 +114,15 @@ recent deployment. This is the "today" half of the input.
 
 Now click **Investigate**.
 
-Wait for it to finish. Then point at four things, in this order:
+Wait for it to finish — a few seconds with both providers live. Then point at
+four things, in this order:
 
 1. **Investigation timeline** — the ordered list of what the system actually did.
 2. **Hindsight memory** — the recalled prior incidents, each with *why it is
-   relevant*. Say: "These are from previous incidents that already happened."
+   relevant*. The verified recall for INC-005 is **`INC-004`**, **`INC-001`**
+   and **`INC-002`** — three real incidents from the reference corpus. The
+   panel's own headline names `INC-004` as the strongest match. Say: "These are
+   from previous incidents that already happened."
 3. **Recommendation** — the action, the risk level, and the evidence.
 4. **Confidence** — and note it is higher here *because* memory contributed.
 
@@ -118,17 +156,25 @@ This is the hinge of the demo. Pause on it.
 
 ### 6 · Incident B — the payoff (20s)
 
-Click **Trigger a similar incident** (or navigate to **`/incidents/INC-016`**).
+On INC-005's page, click **Trigger a similar incident**, then **Create**.
 
-This is a different incident with a similar failure shape. Click **Investigate**.
+This creates a **new** incident on the same service, worded deliberately
+*differently* from INC-005 — the dialog says so on screen, and it is the point:
+retrieval has to match on the failure shape rather than on shared keywords.
 
-Scroll straight to **Hindsight memory**.
+When it opens, click **Investigate**. Scroll straight to **Hindsight memory**.
 
 > "Same product, different incident. The experience we just retained is in this
 > list."
 
 Stop talking. Let them read the recalled experience. This is the moment the
-whole pitch rests on.
+whole pitch rests on. The verified recall here is **`INC-005`** — the incident
+you retained one step ago — and the recommendation rolls the version back to
+the one that experience recorded.
+
+> Do **not** claim the wording is meaningless. The new incident's text is a
+> fixed demonstration phrasing, not telemetry. The dialog labels it
+> *Simulated input*; leave that badge visible and say the word "simulated".
 
 ### 7 · Close (5s)
 
@@ -183,35 +229,77 @@ works.
 ### If the API is up but memory is empty
 
 The memory panel says **"No relevant historical experience found."** This is a
-correct response, not a failure. Run the loop once to populate it: investigate
-INC-011, resolve, retain, then trigger the similar incident.
+correct response, not a failure — it means nothing has been retained yet for
+this failure shape. Run the loop once to populate it: open **`INC-005`**,
+investigate, resolve, retain, then trigger the similar incident.
+
+---
+
+## The ephemeral database — know this before you present
+
+The free hosting tier has **no persistent disk**. The API's SQLite database is
+rebuilt from the reference corpus every time the service wakes from sleep, so
+the incident list always returns to `INC-001`–`INC-008`.
+
+Three consequences:
+
+1. **Incidents you create during a session will disappear** on the next sleep.
+   That includes anything from *Trigger a similar incident*. Do the whole loop
+   in one sitting, or accept starting over.
+2. **Retained experience survives.** Hindsight is an external service. Memories
+   written in an earlier session are still there when the database resets —
+   which is exactly the property the product is about, and it is genuinely true
+   here rather than asserted.
+3. **A retained memory can outlive the incident it came from.** If you retain a
+   dynamically created incident and the database later resets, that memory
+   refers to an incident ID that no longer exists. Prefer retaining
+   `INC-001`–`INC-005`, which are always re-seeded.
+
+The rehearsed path avoids the trap entirely: everything it touches is in the
+reference corpus, and the only dynamically created incident is investigated
+inside the same session.
 
 ---
 
 ## Rehearsal checklist
 
-- [ ] Both terminals running; status line reads `API connected`
-- [ ] Browser at <http://localhost:3000>, logged out of nothing, theme as you like
+- [ ] Public URL warmed — load `/backend/api/health` and confirm `"memory":"live"`
+- [ ] Browser at <https://incidentmind-eight.vercel.app> (or <http://localhost:3000>), zoom 100%
 - [ ] Full path rehearsed end to end at least twice
 - [ ] Timed — under 90 seconds
 - [ ] You can say what is stored in memory without notes
 - [ ] You can say why actions are simulated without notes
-- [ ] You know the one honest limitation: without API keys, memory is a local
-      lexical match and the analyst is deterministic — both correctly labelled
-      as demo. The architecture is identical either way; the providers swap.
+- [ ] You know the one honest nuance: Hindsight chooses which past incidents
+      come back, but it returns no similarity score, so the *"Relevant
+      because…"* sentence is computed locally and labelled
+      `local_lexical_overlap`. Point at the incident IDs; do not attribute the
+      explanation line to Hindsight. See below.
 
 ---
 
 ## The honest limitation — say it if asked
 
-Without a Hindsight key, `GET /api/health` reports `memory: mode=demo`. Without
-a Groq key it reports `llm: mode=demo`.
+Both providers are live on the public deployment, and `/api/health` says so:
 
-In that state, recall is a **lexical** match over the SQLite mirror and analysis
-comes from a deterministic rule-based analyst. The retention→recall loop is
-genuinely real and observable, but it is not semantic search and it is not a
-language model.
+- `llm: mode=live` — `openai/gpt-oss-20b` over Groq
+- `memory: mode=live` — Hindsight, bank `incidentmind-demo`
 
-Say it plainly if a judge presses. Claiming live Hindsight when the health
-endpoint says `mode=demo` is the one thing that would make the whole demo
-untrustworthy. The label exists precisely so you can be caught being honest.
+If a key is removed or a provider stops answering, the same endpoint flips to
+`mode=demo` and the app degrades instead of failing: recall falls back to a
+lexical match over the local SQLite mirror, and analysis falls back to a
+deterministic rule-based analyst. Both are labelled `demo` in the UI. The
+architecture is identical either way — the provider interface swaps, the loop
+does not.
+
+**The one thing not to overclaim.** Hindsight performs the retrieval — it
+decides which past incidents are relevant. It does not return a similarity
+score, so the app computes its own explanation sentence locally and labels it
+`local_lexical_overlap` rather than dressing it up as a Hindsight score.
+
+If a judge presses on that, the honest answer is: *"Hindsight picks the
+evidence. The sentence under it is ours, and it says so in the metadata. I'd
+rather label it than pass it off as a score the provider never returned."*
+
+Claiming live Hindsight when `/api/health` says `mode=demo` is the one thing
+that would make the whole demo untrustworthy. The label exists precisely so you
+can be caught being honest.
