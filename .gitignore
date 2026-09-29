@@ -40,3 +40,7 @@ Thumbs.db
 .vercel
 .env*
 !.env.example
+
+# Private submission workspace: video scripts, social copy, and the local
+# recorder. Kept out of the public repo on purpose.
+content-submission/

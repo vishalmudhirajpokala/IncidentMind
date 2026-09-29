@@ -13,6 +13,14 @@ you can see exactly what it contributed.** The UI shows the recalled
 experiences, the confidence with and without them, and the experience written
 back at the end.
 
+**Live deployment:** <https://incidentmind-eight.vercel.app>
+&nbsp;&nbsp;·&nbsp;&nbsp;Backend health: <https://incidentmind-eight.vercel.app/backend/api/health>
+
+The hosted instance runs against live Hindsight memory and a live LLM, not the
+deterministic fallback — the health endpoint above reports `memory.mode` and
+`llm.mode` for the deployment you are looking at. Nothing needs to be configured
+to try it.
+
 ```
 backend/    FastAPI service, memory + LLM adapters, SQLite, 26 routes
 frontend/   Next.js public landing page and operational console
@@ -163,14 +171,23 @@ Be precise about this, because it is the part that is easy to overstate.
 | --- | --- |
 | Memory recall / retain via `LocalMemoryProvider` | Working, exercised by the test suite and both gates |
 | Analysis via `DeterministicLLMProvider` | Working, same |
-| Live Hindsight (`HINDSIGHT_BASE_URL` + key) | **Unverified.** The adapter is written from the published API reference. No live server has been contacted. |
-| Live Groq (`GROQ_API_KEY`) | **Unverified.** Same. |
+| Live Hindsight (`HINDSIGHT_BASE_URL` + key) | **Live.** Exercised end to end against the deployed instance: retain, recall, and cross-incident retrieval all confirmed. |
+| Live Groq (`GROQ_API_KEY`) | **Live.** Exercised on every investigation in the deployed instance. |
 
 Both live adapters are written to the documented request and response shapes and
-degrade cleanly when the dependency is absent, but until they are pointed at a
-real endpoint and exercised, the correct description is "written against the
-API reference", not "working". Everything currently demonstrated runs on the
-local mirror and the deterministic analyst, and the UI says so on every screen.
+degrade cleanly when the dependency is absent. Keys live only in the backend
+environment and are never exposed to the browser.
+
+Two things to know about the live path, because they change how results should be
+read:
+
+- **Hindsight's recall API returns no similarity score.** The relevance figure the
+  UI shows is computed locally from lexical overlap and labelled `local overlap`.
+  It is not a provider score.
+- **The model is non-deterministic even at temperature 0.1.** Recommendation
+  wording varies between runs, so nothing in the demo or the tests keys off
+  exact phrasing. If the model rate-limits, the analyst falls back to the
+  deterministic path and the UI labels the run accordingly.
 
 The retrieval query always carries `SERVICE:`, `SYMPTOMS:`, `SIGNALS:`,
 `CHANGE:`, `CONTEXT:` and `FAILURE PATTERN:` facets, so recall matches on
@@ -179,6 +196,10 @@ failure shape rather than keyword overlap.
 ## Known limits
 
 - SQLite only, no migrations. Fine for a demo, not for a service.
+- The deployed backend runs on a free host that sleeps when idle. The first
+  request after a quiet period takes 30–50 seconds, and the corpus is re-seeded on
+  boot, so incidents created during a session do not survive a restart. Retained
+  memories do.
 - `LocalMemoryProvider` is a lexical matcher: two incidents sharing no
   vocabulary will not match. The demo's third step is worded specifically to
   prove the facet matching works, not the general case.
