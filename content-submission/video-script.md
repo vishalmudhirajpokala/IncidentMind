@@ -8,18 +8,34 @@ right now. Do not record a line that the running app would contradict.
 | | status |
 |---|---|
 | LLM | `groq` / **live** — `openai/gpt-oss-20b` |
-| Memory | `hindsight` configured but **402 Payment Required**; recall degrades to the local SQLite mirror |
-| Backend | port 8010 |
-| Frontend | port 3000 |
+| Memory | `hindsight` / **live** — bank `incidentmind-demo`, reads and writes confirmed |
+| Public URL | `https://incidentmind-eight.vercel.app` (live, proxied to the deployed API) |
 
-That memory state matters for how you narrate. See "The one line to get right"
-at the bottom.
+Both providers are live, so you can name Groq **and** Hindsight on camera.
+Re-check `/backend/api/health` immediately before you record — if `memory.mode`
+ever reads anything but `live`, drop the Hindsight name. See "The one line to
+get right" at the bottom.
+
+**Incidents referenced: `INC-004` and `INC-001`.** Both are in the reference
+corpus, so they exist on the public URL and locally. Do not use an incident
+number outside `INC-001`–`INC-008`; anything higher existed only in a local
+scratch database and will 404 for anyone following along.
 
 ---
 
 ## Recording setup
 
-**Before you press record:**
+**Recommended: record against the public URL.** Nothing to start, and the
+video shows judges exactly what they will see when they click the link.
+
+1. Open `https://incidentmind-eight.vercel.app/backend/api/health` in a tab.
+2. Confirm it reads `"memory":"live"` and `"llm":"live"`.
+3. That request also **wakes the API** — the free tier sleeps after 15 minutes
+   idle and the first real request after a pause takes 30–50s. Do this
+   immediately before you press record, not during it.
+4. Open the console in a second tab and record that one.
+
+**Fallback: record locally** if the network misbehaves on the day.
 
 ```powershell
 # Terminal 1
@@ -57,7 +73,7 @@ limited — retake it.
 
 ## 0:00–0:15 — Cold open
 
-**Show:** Incident page for `/incidents/INC-011`, scrolled to the Hindsight
+**Show:** Incident page for `/incidents/INC-004`, scrolled to the Hindsight
 memory panel, cursor resting on a recalled incident.
 
 **Say:**
@@ -130,7 +146,7 @@ Let the confirmation sit on screen for a beat. This is the hinge of the video.
 
 ## 2:00–2:45 — The payoff
 
-**Show:** Trigger a similar incident (or open `/incidents/INC-016`), click
+**Show:** Trigger a similar incident (or open `/incidents/INC-001`), click
 **Investigate**, scroll straight to the memory panel.
 
 **Say:**
@@ -157,24 +173,34 @@ Let the confirmation sit on screen for a beat. This is the hinge of the video.
 
 ## The one line to get right
 
-Your memory provider is **not live right now** — Hindsight returns
-`402 Payment Required`, so recall degrades to a local lexical mirror.
+Both providers are live, so you can name Groq and Hindsight plainly. But there
+is one nuance worth understanding, because it is the only part of the memory
+panel that a sharp judge could challenge.
 
-If a viewer asks "is that real Hindsight?", the honest answer is:
+**Hindsight performs the retrieval. The sentence explaining the retrieval does
+not come from Hindsight.**
 
-> "The architecture is identical either way — it's a provider interface. Right
-> now the Hindsight account has no credit, so recall is served from the local
-> mirror and the app labels it `degraded` rather than pretending. The health
-> endpoint and the UI both show that. I wanted the failure visible instead of
-> hidden."
+Hindsight returns no similarity score, so the app falls back to its own
+documented lexical matcher to produce the *"Relevant because it is shared
+symptoms (…)"* line — and labels it `local_lexical_overlap` rather than
+attributing it to Hindsight. This is deliberate, and the comment in
+`app/services/memory_service.py` says so.
 
-**Do not say** "Hindsight recalled these" on this recording. Say "the system
-recalled these." The distinction is small on video and enormous if a judge
-checks.
+What that means on camera:
 
-Conversely, the LLM **is** live, and you can say so plainly. If you get Hindsight
-credit before recording, re-check `/api/health` — if `memory.mode` reads `live`,
-then and only then name Hindsight on camera.
+- **Do** say Hindsight chose which past incidents to surface. That is true.
+- **Do not** narrate the "Relevant because…" text as if Hindsight wrote it.
+- If asked, the honest answer is:
+
+> "Hindsight does the semantic retrieval — it decides which past incidents are
+> relevant. It doesn't return a similarity score, so the app computes its own
+> explanation locally and labels it as such rather than dressing it up as a
+> Hindsight score. The evidence list is Hindsight's; the sentence under it is
+> ours."
+
+**On camera, point at the incident IDs, not the explanation line.** The IDs are
+the proof. The explanation line is the weakest thing on the screen and you
+don't have to draw attention to it.
 
 ---
 
@@ -202,13 +228,13 @@ highlighted, plus the phrase "it remembered."
 
 | # | Time | Source | Note |
 |---|---|---|---|
-| 1 | 0:00 | `/incidents/INC-011` memory panel | Cold open, no title card |
+| 1 | 0:00 | `/incidents/INC-004` memory panel | Cold open, no title card |
 | 2 | 0:15 | same, scroll up to signals | |
 | 3 | 0:30 | `/dashboard` | KPI cards |
-| 4 | 0:45 | back to INC-011, click Investigate | **Leave the 2–5s wait in** |
+| 4 | 0:45 | back to INC-004, click Investigate | **Leave the 2–5s wait in** |
 | 5 | 1:00 | recommendation card | The "why" is the money shot |
 | 6 | 1:20 | Approve → Resolve → Retain | Confirmation must be legible |
-| 7 | 2:00 | `/incidents/INC-016` Investigate → memory | **The payoff. Don't cut early.** |
+| 7 | 2:00 | `/incidents/INC-001` Investigate → memory | **The payoff. Don't cut early.** |
 | 8 | 2:45 | dashboard or incident, wide | Close |
 
 Capture 4, 5 and 7 in **separate takes** and assemble. You cannot rewind a
