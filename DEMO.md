@@ -69,9 +69,10 @@ fix that first.
 
 ---
 
-## Path A — The 60–90 second demo
+## Path A — the core demo
 
-Target time: **75 seconds**, leaving room for questions.
+Target time: **100 seconds**. If you need to land under 90, cut step 1 — the
+landing page is context, not evidence.
 
 ### 1 · Landing page (10s)
 
@@ -123,58 +124,69 @@ four things, in this order:
    and **`INC-002`** — three real incidents from the reference corpus. The
    panel's own headline names `INC-004` as the strongest match. Say: "These are
    from previous incidents that already happened."
-3. **Recommendation** — the action, the risk level, and the evidence.
-4. **Confidence** — and note it is higher here *because* memory contributed.
+3. **Recommendation** — the action, the risk level, and the two counters beneath
+   it: **Evidence** (how many prior experiences fed it) and **History** (whether
+   the remedy has succeeded before). Do **not** say this card names a past
+   incident — it doesn't. The incident IDs are one panel over.
+4. **Confidence** — the agent's own figure for this run. Do **not** claim it is
+   *higher* because memory contributed; that comparison was never measured.
+   Point at the inspectable evidence instead.
 
 The single most important sentence of the whole demo:
 
 > "It didn't just read the logs. It read what we learned the last time this
 > happened."
 
-### 4 · Approve, act, resolve (15s)
+### 4 · Retain the experience (10s)
 
-Click **Approve and simulate**.
+Every incident in the reference corpus ships **already resolved** — that is why
+the header reads `Resolved` and there is no approve button on this page. Under
+**What the agent learned**, click **Retain experience to memory**.
 
-The action runs and is labelled **SIMULATED** in the UI. Say it out loud, and
-explain why in one line:
-
-> "Nothing executes against real infrastructure. It produces simulated
-> telemetry so you can see the outcome without the risk."
-
-Watch the error-rate figure move. Then click **Resolve**.
-
-### 5 · Retain (10s)
-
-Click **Retain experience**.
-
-Confirmation: `Experience added to organisational memory`.
+Confirmation: `Experience added to organizational memory.`
 
 This is the hinge of the demo. Pause on it.
 
 > "That experience is now in memory. It is not a postmortem document nobody
 > reads — it is retrievable input for the next investigation."
 
-### 6 · Incident B — the payoff (20s)
+### 5 · Incident B — the payoff (25s)
 
-On INC-005's page, click **Trigger a similar incident**, then **Create**.
+Click **Trigger a similar incident**, then **Create and investigate**.
 
 This creates a **new** incident on the same service, worded deliberately
 *differently* from INC-005 — the dialog says so on screen, and it is the point:
 retrieval has to match on the failure shape rather than on shared keywords.
 
-When it opens, click **Investigate**. Scroll straight to **Hindsight memory**.
+When it opens, click **Investigate with memory**. Scroll straight to
+**Hindsight memory**.
 
 > "Same product, different incident. The experience we just retained is in this
 > list."
 
 Stop talking. Let them read the recalled experience. This is the moment the
 whole pitch rests on. The verified recall here is **`INC-005`** — the incident
-you retained one step ago — and the recommendation rolls the version back to
-the one that experience recorded.
+you retained one step ago.
 
 > Do **not** claim the wording is meaningless. The new incident's text is a
 > fixed demonstration phrasing, not telemetry. The dialog labels it
 > *Simulated input*; leave that badge visible and say the word "simulated".
+
+### 6 · Approve, resolve, retain (20s)
+
+The new incident is **active**, so unlike the seeded ones it offers the whole
+arc. Click **Approve simulated action**, then **Approve and simulate** in the
+dialog. The *Approved by* field is optional; put your name on the record.
+
+The action runs and is labelled **SIMULATED** in the UI. Say it out loud:
+
+> "Nothing executes against real infrastructure. It produces simulated
+> telemetry so you can see the outcome without the risk."
+
+Watch the error-rate figure move. The resolve form below is prefilled from the
+agent's own top hypothesis, so there is nothing to type. Click **Resolve and
+retain** — the retain checkbox is on by default, which makes resolving and
+retaining a single action here.
 
 ### 7 · Close (5s)
 
@@ -184,7 +196,7 @@ the one that experience recorded.
 
 ## The one thing to emphasise
 
-At step 6, make the causal link explicit. A judge should be able to draw this:
+At step 5, make the causal link explicit. A judge should be able to draw this:
 
 ```
 Incident A  →  resolved  →  experience retained  →  memory

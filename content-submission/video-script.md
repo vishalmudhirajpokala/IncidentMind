@@ -61,6 +61,28 @@ npm run dev
 
 Alternatively OBS Studio, if you want to overlay a webcam in the corner.
 
+### Or let a script drive the whole thing
+
+`content-submission/recorder` drives the verified flow with a headless browser
+and writes a 1920×1080 WebM. It resets memory first, so every run produces the
+same footage, and it cleans up after itself.
+
+```powershell
+cd C:\Users\VISHAL\OneDrive\Desktop\HWH-3.0\content-submission\recorder
+npm install
+npx playwright install chromium
+npm run record
+```
+
+Worth knowing before you choose it:
+
+- It is **silent**. Treat it as the footage to narrate over, or the source clip
+  for the shot list below — not as the finished video.
+- There is **no browser chrome and no cursor**, so it reads as a capture of the
+  app rather than of a person using it.
+- It clicks the real controls, so a script bug shows up as a failed run rather
+  than as a wrong-looking video. It reports which step stopped.
+
 **Settings that matter**
 
 - Record at **1920x1080**. The layout is verified at 1440 and 1920; below 1024
@@ -144,26 +166,28 @@ over, in **Hindsight memory**.
 
 ---
 
-## 1:20–2:00 — Approve, resolve, retain
+## 1:20–1:45 — Retain the experience
 
-**Show:** Click **Approve and simulate**. Watch the error rate move. Then
-**Resolve**, then **Retain experience**.
+**Show:** On INC-005, scroll to **What the agent learned** and click **Retain
+experience to memory**.
+
+> This incident ships already resolved — the header says `Resolved` and there is
+> no approve button on this page. That is correct; do not hunt for one.
 
 **Say:**
 
-> "Nothing executed against real infrastructure. This is simulated telemetry so
-> you can see the outcome without the risk, and a human approved it. I'm now
-> retaining the experience — root cause, action, outcome, and the lesson."
+> "I'm retaining the experience — root cause, action, outcome, and the lesson.
+> Not a log dump: a structured record the next investigation can actually use."
 
 Let the confirmation sit on screen for a beat. This is the hinge of the video.
 
 ---
 
-## 2:00–2:45 — The payoff
+## 1:45–2:30 — The payoff
 
-**Show:** On INC-005's page, click **Trigger a similar incident** → **Create**.
-A new incident opens. Click **Investigate**, then scroll straight to the memory
-panel.
+**Show:** Click **Trigger a similar incident** → **Create and investigate**. A
+new incident opens. Click **Investigate with memory**, then scroll straight to
+the memory panel.
 
 > Leave the **Simulated input** badge visible — the dialog labels the new
 > incident's text as a canned phrasing, and it is. Don't call it telemetry.
@@ -171,8 +195,8 @@ panel.
 **Say:**
 
 > "Same product, different incident — and the wording is deliberately different,
-> so this isn't matching on keywords. The experience we retained thirty seconds
-> ago is in this list, by name: `INC-005`."
+> so this isn't matching on keywords. The experience we retained a minute ago is
+> in this list, by name: `INC-005`."
 
 **Stop talking here.** Let them read the recalled entry. Then, slowly:
 
@@ -181,9 +205,21 @@ panel.
 
 ---
 
-## 2:45–3:00 — Close
+## 2:30–3:00 — Approve, resolve, retain, close
+
+**Show:** Click **Approve simulated action** → **Approve and simulate**. Watch
+the error rate move, then click **Resolve and retain**.
+
+> The new incident is active, so unlike the seeded ones it offers the whole arc.
+> The resolve form is prefilled from the agent's top hypothesis and the retain
+> checkbox is on by default, so resolving and retaining is one click.
 
 **Say:**
+
+> "Nothing executed against real infrastructure. This is simulated telemetry so
+> you can see the outcome without the risk, and a human approved it."
+
+Then close:
 
 > "IncidentMind. Every resolved incident makes the next response smarter. The
 > model isn't retrained — the learning lives in the memory store, which is why
@@ -248,17 +284,22 @@ highlighted, plus the phrase "it remembered."
 
 | # | Time | Source | Note |
 |---|---|---|---|
-| 1 | 0:00 | `/incidents/INC-005` memory panel | Cold open, no title card |
+| 1 | 0:00 | `/incidents/INC-005` memory panel | Cold open. Investigate in this take, then cut to the panel |
 | 2 | 0:15 | same, scroll up to signals | |
 | 3 | 0:30 | `/dashboard` | KPI cards |
-| 4 | 0:45 | back to INC-005, click Investigate | **Leave the 2–5s wait in** |
+| 4 | 0:45 | back to INC-005, click **Investigate with memory** | **Leave the 2–5s wait in** |
 | 5 | 1:00 | recommendation card + memory panel | Point at *Evidence*/*History*, then the IDs |
-| 6 | 1:20 | Approve → Resolve → Retain | Confirmation must be legible |
-| 7 | 2:00 | Trigger similar → Investigate → memory | **The payoff. Don't cut early.** |
-| 8 | 2:45 | dashboard or incident, wide | Close |
+| 6 | 1:20 | **Retain experience to memory** | Confirmation must be legible |
+| 7 | 1:45 | Trigger similar → **Investigate with memory** → memory | **The payoff. Don't cut early.** |
+| 8 | 2:30 | Approve and simulate → Resolve and retain | Read the simulated label |
+| 9 | 2:50 | dashboard or incident, wide | Close |
 
 Capture 4, 5 and 7 in **separate takes** and assemble. You cannot rewind a
 5-second model response if you flub the narration over it.
+
+> The memory panel is **empty until you investigate** — the result is not stored
+> against the incident. Shot 1 is therefore the panel *after* an investigate, in
+> its own take. You cannot open a fresh page and find it already populated.
 
 **One more time, because it is the easiest thing to get wrong:** the memory
 panel names past incidents. The recommendation card counts them. Don't swap
