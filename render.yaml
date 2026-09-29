@@ -1,0 +1,83 @@
+# Render deployment for the IncidentMind API.
+#
+# Render's free web service needs no payment method. The trade-off is that it
+# spins down after 15 minutes of inactivity and takes ~30-50s to wake, so the
+# first request after a pause is slow. Everything else is the FastAPI app
+# running unchanged.
+#
+# Create the service:  https://dashboard.render.com  ->  New  ->  Blueprint
+# then pick this repository. Render reads this file and builds it.
+#
+# The two credentials are deliberately NOT in this file. Set them in the
+# dashboard, or with:
+#   render secret set GROQ_API_KEY=<...> --service incidentmind-api
+#   render secret set HINDSIGHT_API_KEY=<...> --service incidentmind-api
+# Without them the API still runs end to end and labels every response as
+# demo rather than live.
+
+services:
+  - type: web
+    name: incidentmind-api
+    runtime: python
+    rootDir: backend
+    plan: free
+
+    # The app already reads PORT from the environment (app/config.py), so this
+    # binds to whatever Render assigns.
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+
+    envVars:
+      # --- credentials: set these in the dashboard, not here ---------------
+      - key: GROQ_API_KEY
+        sync: false
+      - key: HINDSIGHT_API_KEY
+        sync: false
+
+      # --- hindsight -------------------------------------------------------
+      - key: HINDSIGHT_BASE_URL
+        value: https://api.hindsight.vectorize.io
+      # Must be /v1/default. The shipped .env.example says /api/v1, which is
+      # wrong and makes every retain and recall 404.
+      - key: HINDSIGHT_API_PREFIX
+        value: /v1/default
+      - key: HINDSIGHT_BANK_ID
+        value: incidentmind-demo
+      # 5 makes gpt-oss-20b reject the request with HTTP 413, because the
+      # evidence is sent twice (rendered in the prompt *and* as raw JSON).
+      # 3 is the verified value.
+      - key: MEMORY_RECALL_LIMIT
+        value: "3"
+
+      # --- llm --------------------------------------------------------------
+      - key: GROQ_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: openai/gpt-oss-20b
+      # gpt-oss-20b is a reasoning model: it spends most of its budget on
+      # reasoning tokens (measured 235 of 282 on a trivial prompt) and hits
+      # the cap before producing JSON at the 1200 default.
+      - key: LLM_MAX_TOKENS
+        value: "4000"
+
+      # --- app --------------------------------------------------------------
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_JSON
+        value: "true"
+      - key: MEMORY_PROVIDER
+        value: auto
+      - key: LLM_PROVIDER
+        value: auto
+      # Relative path, so SQLite lands on Render's writable disk. It is
+      # ephemeral: the database re-seeds on boot, but retained Hindsight
+      # memories are external and survive.
+      - key: DATABASE_URL
+        value: sqlite:///./incidents.db
+      - key: CORS_ORIGINS
+        value: https://incidentmind-eight.vercel.app,http://localhost:3000,http://127.0.0.1:3000
+      - key: PYTHON_VERSION
+        value: "3.12.0"
