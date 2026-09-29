@@ -10,6 +10,7 @@ python-multipart==0.0.20
 # --- persistence ----------------------------------------------------------
 sqlmodel==0.0.47
 SQLAlchemy==2.0.54
+psycopg[binary]==3.3.6
 
 # --- validation / settings -------------------------------------------------
 pydantic==2.12.5

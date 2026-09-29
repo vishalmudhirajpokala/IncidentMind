@@ -16,12 +16,16 @@ from app.config import settings
 # Importing the models package registers all tables on SQLModel.metadata.
 import app.models  # noqa: F401  (side-effect import)
 
-connect_args = (
-    {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
-)
+database_url = settings.DATABASE_URL
+if database_url.startswith("postgres://"):
+    database_url = "postgresql+psycopg://" + database_url.removeprefix("postgres://")
+elif database_url.startswith("postgresql://"):
+    database_url = "postgresql+psycopg://" + database_url.removeprefix("postgresql://")
+
+connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    database_url,
     echo=False,
     future=True,
     connect_args=connect_args,

@@ -6,7 +6,7 @@ import { buildApi } from "./api-core";
  * Server-side binding. Server components and route handlers talk to the
  * backend directly; the internal URL never reaches the client bundle.
  */
-const base = process.env.API_INTERNAL_URL ?? "http://127.0.0.1:8000";
+const base = (process.env.API_INTERNAL_URL ?? "http://127.0.0.1:8000").replace(/\/+$/, "");
 
 export const api = buildApi(base);
 
