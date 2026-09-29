@@ -62,8 +62,14 @@ services:
         value: "4000"
 
       # --- app --------------------------------------------------------------
+      # Must NOT be "production". app/main.py:51 only seeds the reference
+      # corpus when APP_ENV != "production", and that corpus is what gives a
+      # cold start something to recall. Render's free tier wipes the disk when
+      # the instance sleeps, so every wake begins with an empty database; with
+      # APP_ENV=production the deployed API starts with zero incidents and
+      # returns 404 on every investigation.
       - key: APP_ENV
-        value: production
+        value: demo
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_JSON
