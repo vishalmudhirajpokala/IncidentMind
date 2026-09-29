@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title description">
+  <title id="title">IncidentMind investigation and memory architecture</title>
+  <desc id="description">An incident flows through the FastAPI agent service, memory and language-model provider interfaces, into a human-approved simulated action. Resolved experience is retained to an external Hindsight provider when configured and to a local memory mirror.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4472CA" />
+    </marker>
+    <style>
+      .title { font: 600 26px 'DM Sans', Arial, sans-serif; fill: #0A369D; }
+      .label { font: 600 17px 'DM Sans', Arial, sans-serif; fill: #0A369D; }
+      .detail { font: 14px 'DM Sans', Arial, sans-serif; fill: #40516f; }
+      .tag { font: 600 11px 'DM Sans', Arial, sans-serif; letter-spacing: 0; fill: #4472CA; }
+      .box { fill: #fff; stroke: #92B4F4; stroke-width: 2; rx: 8; }
+      .focus { fill: #CFDDFE; stroke: #4472CA; stroke-width: 2; rx: 8; }
+      .external { fill: #f8faff; stroke: #5E7CE2; stroke-width: 2; stroke-dasharray: 7 5; rx: 8; }
+      .connector { fill: none; stroke: #4472CA; stroke-width: 2.5; marker-end: url(#arrow); }
+      .mirror { fill: none; stroke: #5E7CE2; stroke-width: 2; stroke-dasharray: 7 5; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #4472CA; stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1200" height="700" rx="12" fill="#f7f9fe" />
+  <text x="48" y="48" class="title">IncidentMind · investigation and memory flow</text>
+
+  <rect x="48" y="95" width="215" height="90" class="box" />
+  <text x="70" y="127" class="tag">INPUT</text>
+  <text x="70" y="153" class="label">Incident + signals</text>
+  <text x="70" y="174" class="detail">service · symptoms · change</text>
+
+  <rect x="345" y="95" width="245" height="90" class="focus" />
+  <text x="367" y="127" class="tag">FASTAPI</text>
+  <text x="367" y="153" class="label">AgentService</text>
+  <text x="367" y="174" class="detail">orchestrates the investigation</text>
+
+  <path d="M263 140 H345" class="connector" />
+
+  <rect x="345" y="245" width="245" height="88" class="box" />
+  <text x="367" y="275" class="tag">MEMORY INTERFACE</text>
+  <text x="367" y="301" class="label">MemoryService</text>
+  <text x="367" y="321" class="detail">multi-facet recall · structured retain</text>
+  <path d="M467 185 V245" class="connector" />
+
+  <rect x="700" y="205" width="220" height="88" class="external" />
+  <text x="722" y="235" class="tag">EXTERNAL · WHEN CONFIGURED</text>
+  <text x="722" y="261" class="label">Hindsight bank</text>
+  <text x="722" y="281" class="detail">recall facts · retain experience</text>
+  <path d="M590 274 H700" class="connector" />
+
+  <rect x="700" y="322" width="220" height="88" class="focus" />
+  <text x="722" y="352" class="tag">VERIFIED LOCAL PATH</text>
+  <text x="722" y="378" class="label">SQLite memory mirror</text>
+  <text x="722" y="398" class="detail">local lexical retrieval</text>
+  <path d="M590 303 H646 V366 H700" class="mirror" />
+
+  <rect x="345" y="430" width="245" height="88" class="box" />
+  <text x="367" y="460" class="tag">ANALYSIS INTERFACE</text>
+  <text x="367" y="486" class="label">Structured investigation</text>
+  <text x="367" y="506" class="detail">current evidence + recalled facts</text>
+  <path d="M467 185 V430" class="connector" />
+
+  <rect x="700" y="430" width="220" height="88" class="external" />
+  <text x="722" y="460" class="tag">EXTERNAL · WHEN CONFIGURED</text>
+  <text x="722" y="486" class="label">Groq LLM</text>
+  <text x="722" y="506" class="detail">structured output</text>
+  <path d="M590 474 H700" class="connector" />
+
+  <rect x="700" y="547" width="220" height="76" class="focus" />
+  <text x="722" y="576" class="tag">VERIFIED LOCAL PATH</text>
+  <text x="722" y="602" class="label">Deterministic analyst</text>
+  <path d="M590 495 H646 V585 H700" class="mirror" />
+
+  <rect x="978" y="95" width="174" height="90" class="focus" />
+  <text x="997" y="127" class="tag">DECISION</text>
+  <text x="997" y="153" class="label">Recommendation</text>
+  <text x="997" y="174" class="detail">evidence · risk · action</text>
+  <path d="M590 140 H978" class="connector" />
+  <path d="M920 474 H950 V185 H978" class="connector" />
+
+  <rect x="978" y="245" width="174" height="78" class="box" />
+  <text x="997" y="277" class="tag">HUMAN CONTROL</text>
+  <text x="997" y="303" class="label">Approval required</text>
+  <path d="M1065 185 V245" class="connector" />
+
+  <rect x="978" y="370" width="174" height="78" class="box" />
+  <text x="997" y="402" class="tag">ALWAYS SIMULATED</text>
+  <text x="997" y="428" class="label">Action + telemetry</text>
+  <path d="M1065 323 V370" class="connector" />
+
+  <rect x="48" y="547" width="215" height="76" class="box" />
+  <text x="70" y="578" class="tag">AFTER RESOLUTION</text>
+  <text x="70" y="604" class="label">Retained experience</text>
+  <path d="M978 410 H950 V655 H155 V623" class="loop" />
+  <path d="M263 585 H310 V333 H345" class="loop" />
+</svg>

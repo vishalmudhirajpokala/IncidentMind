@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+build/
+
+# Local environment overrides. Never commit credentials, and never commit a
+# machine-specific API host. See .env.example for the shape.
+.env
+.env.local
+.env*.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IncidentMind — Hero Network Graph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* Simple hero layout to demonstrate the SVG */
+    body { margin:0; font-family: system-ui, sans-serif; background: var(--bg, #0a0e1a); color: #e2e8f0; min-height: 100vh; }
+    .hero { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin: 1rem 0; letter-spacing: -.02em; }
+    .hero p { font-size: 1.1rem; opacity: 0.7; margin-bottom: 2rem; }
+    .svg-container { display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>IncidentMind</h1>
+    <p>Memory-first AI incident response agent</p>
+
+    <!-- Embedded SVG network graph -->
+    <div class="svg-container">
+      <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          /* --- Color palette --*/
+          --bg:#0a0e1a;          /* deep navy */
+          --node:#4a5568;        /* muted slate for intermediate */
+          --traced:#0891b2;      /* teal/cyan for destination */
+          --line:#2d3748;        /* muted charcoal */
+          --glow:#3182ce;        /* subtle accent for pulse */
+
+          /* --- Background --*/
+          .bg { fill: var(--bg); }
+
+          /* --- Nodes --*/
+          .node { fill: var(--node); stroke: var(--line); stroke-width:1px; }
+          .node.traced { fill: var(--traced); r:8; }
+
+          /* --- Lines --*/
+          .line { fill:none; stroke:var(--line); stroke-width:1.5px; stroke-linejoin:round; }
+
+          /* --- Pulse/glow animation traveling along a connection --*/
+          @keyframes pulse-glow {
+            0%   { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+            25%  { stroke: var(--glow); stroke-width: 3px; opacity: 0.6; }
+            50%  { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+            75%  { stroke: var(--glow); stroke-width: 3px; opacity: 0.6; }
+            100% { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+          }
+          .pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+        </style>
+
+        <!-- Background -->
+        <rect class="bg" width="200" height="180" rx="4"/>
+
+        <!-- Nodes: 1 traced + 7 intermediate -->
+        <circle class="node traced" cx="30" cy="90" r="6"/>   <!-- traced destination -->
+        <circle class="node"      cx="70" cy="40" r="4"/>   <!-- intermediate -->
+        <circle class="node"      cx="70" cy="140" r="4"/>  <!-- intermediate -->
+        <circle class="node"      cx="110" cy="20" r="4"/>  <!-- intermediate -->
+        <circle class="node"      cx="110" cy="70" r="4"/>  <!-- intermediate -->
+        <circle class="node"      cx="110" cy="120" r="4"/> <!-- intermediate -->
+        <circle class="node"      cx="150" cy="90" r="4"/>  <!-- intermediate -->
+        <circle class="node"      cx="150" cy="30" r="4"/>  <!-- intermediate -->
+
+        <!-- Connections -->
+        <!-- Pulse travels on the first line (traced → mid) -->
+        <line class="line pulse" x1="30" y1="90"  x2="70" y2="40"/>
+        <line class="line"       x1="70" y1="40"  x2="110" y2="20"/>
+        <line class="line"       x1="70" y1="140" x2="110" y2="120"/>
+        <line class="line"       x1="110" y1="20"  x2="150" y2="30"/>
+        <line class="line"       x1="110" y1="120" x2="150" y2="90"/>
+        <line class="line"       x1="150" y1="90"  x2="150" y2="30"/>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

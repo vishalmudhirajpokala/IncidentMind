@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="IncidentMind">
+  <!--
+    Tab icon, in the app's own palette.
+
+    Next.js's `icon.svg` file convention puts a <link rel="icon"> in the document
+    head. Without it the browser falls back to requesting /favicon.ico, which
+    404s -- a console error on every page load, and a blank tab.
+
+    The mark is the palette's deep blue (#0A369D, --status-critical) with a white
+    shield, read as "contain the incident". Drawn from two primitives at 16px:
+    no gradients, no strokes thinner than 2 units, no detail that turns to mud.
+  -->
+  <rect width="32" height="32" rx="7" fill="#0A369D" />
+  <path
+    fill="#FFFFFF"
+    d="M16 6.5 25 10v6.2c0 5.3-3.7 8.6-9 10.3-5.3-1.7-9-5-9-10.3V10l9-3.5Z"
+  />
+  <!--
+    The held bar. Reads as containment at 16px and as a "pause" on the incident
+    at 32px, which is the whole product: reversible action, human approval.
+  -->
+  <rect x="11.5" y="13.5" width="9" height="2.4" rx="1.2" fill="#0A369D" />
+  <rect x="11.5" y="18" width="9" height="2.4" rx="1.2" fill="#0A369D" />
+</svg>

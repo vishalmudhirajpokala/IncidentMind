@@ -1,0 +1,74 @@
+<!--
+  Lightweight animated network graph for hero section.
+  6 nodes connected by thin lines, one traced destination node.
+  Subtle pulse animation traveling along one connection.
+  Deep navy background, muted blue/teal technical aesthetic.
+  Pure CSS @keyframes animation — no external libraries, no watermarks.
+-->
+<svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* --- Color palette --*/
+    --bg:#0a0e1a;          /* deep navy */
+    --node:#4a5568;        /* muted slate for intermediate */
+    --traced:#0891b2;      /* teal/cyan for destination */
+    --line:#2d3748;        /* muted charcoal */
+    --glow:#3182ce;        /* subtle accent for pulse */
+
+    /* --- Background --*/
+    .bg { fill: var(--bg); }
+
+    /* --- Nodes --*/
+    .node { fill: var(--node); stroke: var(--line); stroke-width:1px; }
+    .node.traced { fill: var(--traced); r:8; /* larger + distinct */ }
+
+    /* --- Lines --*/
+    .line { fill:none; stroke:var(--line); stroke-width:1.5px; stroke-linejoin:round; }
+
+    /* --- Pulse/glow animation traveling along a line --*/
+    @keyframes pulse-glow {
+      0%   { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+      25%  { stroke: var(--glow); stroke-width: 3px; opacity: 0.6; }
+      50%  { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+      75%  { stroke: var(--glow); stroke-width: 3px; opacity: 0.6; }
+      100% { stroke: var(--glow); stroke-width: 1.5px; opacity: 0.4; }
+    }
+    .pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+
+    /* --- Subtle node hover glow (optional, disabled on hero) --*/
+    /* .node:hover { fill: var(--traced); } */
+  </style>
+
+  <!-- Background -->
+  <rect class="bg" width="200" height="180" rx="4"/>
+
+  <!-- Nodes (8 total: 1 traced + 7 intermediate) -->
+  <!-- Positions arranged in a subtle flow layout -->
+  <circle class="node traced" id="dest-1" cx="30" cy="90" r="6"/>
+  <circle class="node"      id="mid-1" cx="70" cy="40" r="4"/>
+  <circle class="node"      id="mid-2" cx="70" cy="140" r="4"/>
+  <circle class="node"      id="mid-3" cx="110" cy="20" r="4"/>
+  <circle class="node"      id="mid-4" cx="110" cy="70" r="4"/>
+  <circle class="node"      id="mid-5" cx="110" cy="120" r="4"/>
+  <circle class="node"      id="mid-6" cx="150" cy="90" r="4"/>
+  <circle class="node"      id="mid-7" cx="150" cy="30" r="4"/>
+
+  <!-- Connections (lines) -->
+  <!-- traced node connects to mid-1 -->
+  <line class="line pulse"      x1="30" y1="90"  x2="70" y2="40"/>
+  <!-- intermediate connections -->
+  <line class="line"            x1="70" y1="40"  x2="110" y2="20"/>
+  <line class="line"            x1="70" y1="140" x2="110" y2="120"/>
+  <line class="line"            x1="110" y1="20"  x2="150" y2="30"/>
+  <line class="line"            x1="110" y1="120" x2="150" y2="90"/>
+  <line class="line"            x1="150" y1="90"  x2="?" y2="?"/>
+
+  <!-- Optional: return loop back to traced node for flow feel -->
+  <!-- <line class="line"            x1="150" y1="90"  x3="30" y3="90"/> -->
+
+  <!--
+    Note: The pulse animation travels on the first connection line
+    (traced → mid-1). The animation loops every 2.5 seconds.
+    You can add more .pulse classes on other lines if you want
+    multiple signal paths, but one is enough for the hero effect.
+  -->
+</svg>
