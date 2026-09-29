@@ -1,0 +1,66 @@
+# Fly.io deployment for the IncidentMind API.
+#
+# This deploys the existing FastAPI application unchanged. The only runtime
+# values added here are the ones a hosted environment needs: a writable volume
+# for SQLite, the deployed frontend's origin for CORS, and a health check.
+#
+# Create the app once with:  fly launch --no-deploy --copy-config
+# then:                      fly volumes create im_data --size 1
+# then:                      fly secrets set GROQ_API_KEY=... HINDSIGHT_API_KEY=...
+# then:                      fly deploy
+
+app = "incidentmind-api"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  # No credentials are set here. HINDSIGHT_API_KEY and GROQ_API_KEY belong in
+  # `fly secrets`, never in this file. Without them the API still runs end to
+  # end and labels every response as demo rather than live.
+  APP_ENV = "production"
+  LOG_LEVEL = "INFO"
+  LOG_JSON = "true"
+
+  # SQLite path on the mounted volume. Four slashes = absolute path.
+  DATABASE_URL = "sqlite:////data/incidents.db"
+
+  # The deployed Next.js frontend. The browser only ever calls the frontend
+  # origin (the API is reached through the Next rewrite), so this is belt and
+  # braces rather than the primary CORS path.
+  CORS_ORIGINS = "https://incidentmind-eight.vercel.app,http://localhost:3000,http://127.0.0.1:3000"
+
+  # `auto` uses Hindsight when it is configured and the local mirror when it is
+  # not; `auto` for the LLM uses Groq when configured and the deterministic
+  # analyst when it is not.
+  MEMORY_PROVIDER = "auto"
+  LLM_PROVIDER = "auto"
+
+[[mounts]]
+  source = "im_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 40
+    hard_limit = 80
+
+  # Hitting this confirms the app imported, the schema exists and the seed ran.
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "20s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

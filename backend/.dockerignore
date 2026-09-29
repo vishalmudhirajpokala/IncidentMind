@@ -1,0 +1,21 @@
+# Keep the build context small and never bake local state or secrets into a layer.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local database, logs and secrets
+*.db
+*.db-journal
+*.log
+.env
+.env.*
+!.env.example
+
+# Tests and docs are not needed at runtime
+tests/
+scripts/
+README.md
+Dockerfile
+.dockerignore

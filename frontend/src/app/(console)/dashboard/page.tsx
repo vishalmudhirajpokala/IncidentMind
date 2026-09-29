@@ -29,9 +29,13 @@ async function load(): Promise<DashboardData> {
     api.recentMemories(5).catch(() => []),
   ]);
 
+  // The address is named deliberately: an operator debugging this needs to know
+  // which port to start. The wording also has to explain why the page below is
+  // empty, otherwise an empty console reads as a broken product rather than an
+  // API that is not up yet.
   const offline =
     health === null && metrics === null
-      ? `Cannot reach the IncidentMind API at ${backendLabel}. Start the backend, then reload.`
+      ? `The console reads its data from the IncidentMind API at ${backendLabel}, which is not responding right now. Every panel below depends on it, so they stay empty until it does. Start the backend, then reload.`
       : null;
 
   return {
@@ -61,7 +65,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {offline ? <ErrorState title="API unreachable" message={offline} /> : null}
+      {offline ? <ErrorState title="Waiting for the IncidentMind API" message={offline} /> : null}
 
       {metrics ? <KpiCards metrics={metrics} /> : null}
 
